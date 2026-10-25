@@ -1,0 +1,10 @@
+{
+  "name": "amirs-ice-cream",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Landing page for Amir's Ice Cream, with a procedural Three.js cone as its fixed stage",
+  "dependencies": {
+    "three": "0.169.0"
+  }
+}

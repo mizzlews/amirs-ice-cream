@@ -1,0 +1,86 @@
+{
+  "name": "Amir's cone",
+  "reference": "assets/ice-cream-cone-with-spoon.jpg",
+  "referenceLicence": "CC0, Thegreatmutata, via Wikimedia Commons",
+  "pipeline": "img2threejs (order followed by hand; forge/*.py gates could not run, no Python 3 on this machine)",
+  "objectClass": { "primaryDomain": "object", "class": "food/confection", "complexity": "moderate" },
+  "qualityContract": {
+    "targetTriangles": 56000,
+    "frameBudget": "60fps desktop, 30fps on a coarse pointer",
+    "statedApproximations": [
+      "Hand, paper sleeve and plastic spoon from the reference are deliberately absent: the page needs the cone alone on a flat field.",
+      "Undersides and the rear of the cone are inferred from a single view.",
+      "Ice cream is a surface approximation with sheen and a low clearcoat, not true subsurface scattering."
+    ]
+  },
+  "components": [
+    {
+      "id": "cone",
+      "topologyClass": "continuous-revolved",
+      "topologyRationale": "A surface of revolution with a periodic relief field; a box or a stock ConeGeometry cannot carry the lattice in the silhouette.",
+      "primitive": "parametric-buffer-geometry",
+      "localFeatures": [
+        "diamond waffle lattice, 18 cells around by 14 down, relief falling off toward the tip",
+        "toast gradient baked to vertex colour, ridge crowns darker than valleys"
+      ]
+    },
+    {
+      "id": "frill",
+      "topologyClass": "thin-shell-annulus",
+      "topologyRationale": "A flared collar with a scalloped outer edge and a vertical wave; double-sided, no thickness.",
+      "primitive": "parametric-annulus",
+      "localFeatures": ["9-lobe scallop on the outer edge", "two-frequency vertical wave", "pale inner face"]
+    },
+    {
+      "id": "scoopLower",
+      "topologyClass": "continuous-organic",
+      "topologyRationale": "A displaced sphere; the shear line is a deformation of one surface, not a seam between two.",
+      "primitive": "icosahedron-displaced",
+      "localFeatures": ["flattened to 0.62 of its height", "horizontal shear line from the scoop tool"]
+    },
+    {
+      "id": "scoopUpper",
+      "topologyClass": "continuous-organic",
+      "topologyRationale": "Same, at a higher noise amplitude: the torn cauliflower surface is the identity feature.",
+      "primitive": "icosahedron-displaced",
+      "localFeatures": ["three-octave tear noise", "ribbon swirl in vertex colour", "overhanging lip on one side"]
+    },
+    {
+      "id": "inclusions",
+      "topologyClass": "instanced-shards",
+      "primitive": "instanced-dodecahedron",
+      "localFeatures": ["seeded sampling on the upper scoop surface", "hidden for flavours with no bits"]
+    },
+    {
+      "id": "drips",
+      "topologyClass": "swept-tube",
+      "primitive": "catmull-rom-tube",
+      "localFeatures": ["three runs over the rim", "length animated, eased"]
+    }
+  ],
+  "materials": [
+    { "id": "waffle", "baseColorRange": ["#e8c389", "#c8833f"], "roughness": 0.74, "metalness": 0.0, "vertexColors": true },
+    { "id": "cream", "roughness": 0.6, "clearcoat": 0.09, "clearcoatRoughness": 0.45, "sheen": 0.55, "vertexColors": true },
+    { "id": "bits", "roughness": 0.9, "metalness": 0.0 }
+  ],
+  "lighting": {
+    "key": "warm directional from the upper left, intensity 2.4",
+    "fill": "hemisphere, sand above and cobalt below, to tie the model to the page",
+    "rim": "cool directional from behind right, intensity 0.9",
+    "environment": "procedural gradient canvas through PMREMGenerator; no external HDR"
+  },
+  "pivots": {
+    "root": "cone tip at the origin",
+    "scoopUpper": "its own centre, so a flavour change can scale it in",
+    "turntable": "the root, Y axis"
+  },
+  "featureReviewTargets": {
+    "critical": ["waffle-lattice", "rim-frill", "scoop-tear-surface", "two-scoop-stack", "toast-gradient"],
+    "important": ["drip-runs", "inclusion-scatter", "melt-gloss"]
+  },
+  "actionReady": {
+    "explodable": "every part is a named child of the root group, listed in userData.parts",
+    "clickable": "each part mesh carries userData.partId and is raycastable",
+    "interaction": "setFlavour(id) pushes the chosen flavour onto the top scoop and slides the previous one down"
+  }
+}
