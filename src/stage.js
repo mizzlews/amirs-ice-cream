@@ -3,6 +3,7 @@ import { createIceCreamConeModel } from './createIceCreamConeModel.js';
 
 // A procedural environment: a sand-over-cobalt gradient with one bright window,
 // so the cream picks up a real reflection without loading an HDR file.
+// testing branch
 function environmentTexture(renderer) {
   const canvas = document.createElement('canvas');
   canvas.width = 128;
