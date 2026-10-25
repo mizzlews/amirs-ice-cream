@@ -4,6 +4,7 @@ import * as THREE from '../vendor/three.module.js';
 // Code only: no meshes, textures or art packs are loaded. See object-sculpt-spec.json.
 
 // --- deterministic value noise ------------------------------------------------
+// test change
 
 function hash3(x, y, z) {
   let h = x * 374761393 + y * 668265263 + z * 2147483647;
